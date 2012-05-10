@@ -7,9 +7,9 @@ import ConfigParser
 import os.path
 
 
-#logging.basicConfig(
-#		level = logging.INFO,
-#		)
+logging.basicConfig(
+		level = logging.INFO,
+		)
 
 #log setting
 def logger():
@@ -21,7 +21,8 @@ def logger():
 	maxbytes     = int(config.get("log", "maxbytes"))
 
 	logger = logging.getLogger()
-	Rthandler = RotatingFileHandler(os.path.split(os.path.realpath(__file__))[0]+'/'+name, 
+	Rthandler = RotatingFileHandler(os.path.split(os.path.realpath(__file__))[0]+'/'+name,
+			"a", 
 			maxBytes=maxbytes,
 			backupCount=backupcount)
 	Rthandler.setLevel(logging.INFO)

@@ -17,7 +17,6 @@ from datetime import timedelta, date
 import signal
 
 logging = analysis_logger.logger()
-logging.info("test")
 
 class Daemon:
 	"""
