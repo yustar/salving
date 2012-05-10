@@ -16,6 +16,9 @@ import analysis_xml
 from datetime import timedelta, date
 import signal
 
+logging = analysis_logger.logger()
+logging.info("test")
+
 class Daemon:
 	"""
 	A generic daemon class.

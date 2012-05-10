@@ -7,9 +7,9 @@ import ConfigParser
 import os.path
 
 
-logging.basicConfig(
-		level = logging.INFO,
-		)
+#logging.basicConfig(
+#		level = logging.INFO,
+#		)
 
 #log setting
 def logger():
@@ -28,6 +28,7 @@ def logger():
 	formatter = logging.Formatter(format)
 	Rthandler.setFormatter(formatter)
 	logger.addHandler(Rthandler)
+	return logger
 
 if __name__ == "__main__":
 	print "This program is being run by itself"
