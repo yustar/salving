@@ -5,6 +5,7 @@ from signal import SIGTERM
 import salving_logger
 
 class Daemon:
+
 	"""
 	A generic daemon class.
 	
@@ -13,7 +14,8 @@ class Daemon:
 	def __init__(self, pidfile, stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
 		self.stdin   = stdin
 		self.stdout  = stdout
-		self.stderr  = stderr
+		#self.stderr  = stderr
+		self.stderr  = '/tmp/salving.err'
 		self.pidfile = pidfile
 		self.logger  = salving_logger.logger()
 	

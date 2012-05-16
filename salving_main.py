@@ -1,12 +1,25 @@
 #!/usr/bin/env python
 
 import sys, time
+from multiprocessing import Process
 from salving_daemon import Daemon
 
 class MyDaemon(Daemon):
+	
+	def po(self):
+		#while True:
+		self.logger.info("child process is running....")
+
 	def run(self):
+		__processes = []
 		while True:
-			self.logger.info('test')	
+			if(len(__processes)<3):
+				p = Process(target=self.po)
+				p.start()
+				p.join()
+				__processes.append(p.pid)
+				self.logger.info("process name is %s", p.name)
+				self.logger.info("process id is %s", str(p.pid))
 			time.sleep(1)
 
 if __name__ == "__main__":
