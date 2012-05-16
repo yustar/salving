@@ -110,7 +110,10 @@ class Daemon:
 		logging.info("start to call _daemonize")
 		self._daemonize()
 		logging.info("start to call _run")
-		self._run()
+		try:
+			self._run()
+		except Exception, data:
+			logging.error(data)
 		logging.info("call _run over")
 		
 	def stop(self):
