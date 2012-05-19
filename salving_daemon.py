@@ -107,7 +107,6 @@ class Daemon:
 			sys.stderr.write(message % self.pidfile)
 			return # not an error in a restart
 
-		self.logger.info(self.processes_list)
 		# Try killing the sub-process
 		for pid_l in open('/tmp/sb.tmp'):
 			try:
@@ -118,7 +117,8 @@ class Daemon:
 			except OSError, err:
 				err = str(err)
 				self.logger.info(err)
-
+		os.remove("/tmp/sb.tmp")
+		
 		# Try killing the daemon process	
 		try:
 			while 1:
