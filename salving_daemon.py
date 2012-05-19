@@ -6,7 +6,6 @@ import salving_logger
 
 class Daemon:
 
-	processes_list = []
 	"""
 	A generic daemon class.
 	
@@ -19,6 +18,7 @@ class Daemon:
 		self.stderr  = '/tmp/salving.err'
 		self.pidfile = pidfile
 		self.logger  = salving_logger.logger()
+		self.processes_list = []
 	
 	def daemonize(self):
 		"""
@@ -107,6 +107,18 @@ class Daemon:
 			sys.stderr.write(message % self.pidfile)
 			return # not an error in a restart
 
+		self.logger.info(self.processes_list)
+		# Try killing the sub-process
+		for pid_l in open('/tmp/sb.tmp'):
+			try:
+				while 1:
+					self.logger.info(pid_l.strip())
+					os.kill(int(pid_l.strip()), SIGTERM)
+					time.sleep(0.1)
+			except OSError, err:
+				err = str(err)
+				self.logger.info(err)
+
 		# Try killing the daemon process	
 		try:
 			while 1:
@@ -120,16 +132,6 @@ class Daemon:
 			else:
 				print str(err)
 				sys.exit(1)
-		# Try killing the sub-process
-		for pid_l in self.processes_list:
-			try:
-				while 1:
-					os.kill(pid_l, SIGTERM)
-					time.sleep(0.1)
-			except OSError, err:
-				err = str(err)
-				self.logger.info(err)
-
 
 	def restart(self):
 		"""

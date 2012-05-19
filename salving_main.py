@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import sys, time
+import signal
+from signal import SIGTERM
 from multiprocessing import Process
 from salving_daemon import Daemon
 
@@ -12,12 +14,20 @@ class MyDaemon(Daemon):
 			time.sleep(3600)
 
 	def run(self):
+		signal.signal(signal.SIGCHLD, signal.SIG_IGN)	
 		while True:
-			if(len(self.processes_list)<3):
+			#self.logger.info(self.processes_list)
+			if(len(self.processes_list)<1):
 				p = Process(target=self.po)
 				p.start()
 				#p.join()
+				#no-blocking init sub process
 				self.processes_list.append(p.pid)
+				#put sub process pid into a tmpl file
+				file_handler = open('/tmp/sb.tmp', 'a')
+				file_handler.write("%d\n" % p.pid)
+				file_handler.close()	
+				self.logger.info(self.processes_list)	
 				self.logger.info("process name is %s", p.name)
 				self.logger.info("process id is %s", str(p.pid))
 			time.sleep(1)
