@@ -5,7 +5,7 @@ import os.path
 import MySQLdb
 import MySQLdb.cursors
 import ConfigParser
-from analysis_logger import *
+import salving_logger
 
 class database:
 
@@ -19,23 +19,21 @@ class database:
 	_conn = ""
 	_cursor = ""
 
-	def __init__(self, dbname=None, host=None):
+	def __init__(self, dbtype, logger):
 		config = ConfigParser.ConfigParser()
-		config.read(os.path.split(os.path.realpath(__file__))[0]+"/analysis.conf")
-		db = "database"
-		if dbname is None:
-			self._dbname = config.get(db, 'dbname')
+		config.read(os.path.split(os.path.realpath(__file__))[0]+"/salving.conf")
+		if(dbtype == None):
+			db = "basic_database"
 		else:
-			self._dbname  = dbname
-		if host is None:
-			self._dbhost = config.get(db, 'dbhost')
-		else:
-			self._dbhost = host
+			db = dbtype
+		self._dbhost = config.get(db, 'dbhost')
+		self._dbname = config.get(db, 'dbname')
 		self._dbuser = config.get(db, 'dbuser')
 		self._dbpassword = config.get(db, 'dbpassword')
 		self._dbcharset = config.get(db, 'dbcharset')
 		self._dbport = int(config.get(db, "dbport"))
 		self._conn = self.connectMySQL()
+		self.logger = logger
 
 
 	#mysql connect
@@ -51,7 +49,7 @@ class database:
 					charset=self._dbcharset,
 					)
 		except Exception,data:
-			logging.error("connect database failed, %s" % data)
+			self.logger.error("connect database failed, %s" % data)
 			conn = False
 		return conn
 
@@ -66,7 +64,7 @@ class database:
 				res = self._cursor.fetchall()
 			except Exception, data:
 				res = False
-				logging.warn("query database exception, %s" % data)
+				self.logger.warn("query database exception, %s" % data)
 		return res
 
 
@@ -80,7 +78,7 @@ class database:
 				flag = True
 			except Exception, data:
 				flag = False
-				logging.warn("update database exception, %s" % data)
+				self.logger.warn("update database exception, %s" % data)
 
 		return flag
 
@@ -93,9 +91,9 @@ class database:
 				if(type(self._conn)=='object'):
 					self._conn.close()
 			except Exception, data:
-				logging.warn("close database exception, %s,%s,%s" % (data, type(self._cursor), type(self._conn)))
+				self.logger.warn("close database exception, %s,%s,%s" % (data, type(self._cursor), type(self._conn)))
 
 #get database class	
-def db(dbname):
-	db = database(dbname)
+def db(dbname, logger):
+	db = database(dbname, logger)
 	return db

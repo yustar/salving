@@ -3,6 +3,7 @@
 import sys, os, time, atexit
 from signal import SIGTERM
 import salving_logger
+import commands, re
 
 class Daemon:
 
@@ -17,7 +18,7 @@ class Daemon:
 		#self.stderr  = stderr
 		self.stderr  = '/tmp/salving.err'
 		self.pidfile = pidfile
-		self.logger  = salving_logger.logger()
+		self.logger  = salving_logger.logger('salving.log')
 		self.processes_list = []
 	
 	def daemonize(self):
@@ -108,16 +109,19 @@ class Daemon:
 			return # not an error in a restart
 
 		# Try killing the sub-process
-		for pid_l in open('/tmp/sb.tmp'):
+		cpids = commands.getoutput("pstree -p %d" % pid)
+		cpids = re.findall(r'[0-9]+', cpids)
+		if(len(cpids)>0):
+			del cpids[0]
+		for cpid in cpids:
 			try:
 				while 1:
-					self.logger.info(pid_l.strip())
-					os.kill(int(pid_l.strip()), SIGTERM)
+					self.logger.info(cpid)
+					os.kill(int(cpid), SIGTERM)
 					time.sleep(0.1)
 			except OSError, err:
 				err = str(err)
 				self.logger.info(err)
-		os.remove("/tmp/sb.tmp")
 		
 		# Try killing the daemon process	
 		try:
