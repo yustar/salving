@@ -21,7 +21,7 @@ class database:
 
 	def __init__(self, dbtype, logger):
 		config = ConfigParser.ConfigParser()
-		config.read(os.path.split(os.path.realpath(__file__))[0]+"/salving.conf")
+		config.read(os.path.split(os.path.realpath(__file__))[0]+"/cfg/salving.conf")
 		if(dbtype == None):
 			db = "basic_database"
 		else:

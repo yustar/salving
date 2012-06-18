@@ -14,7 +14,7 @@ import os.path
 #log setting
 def logger(name=None):
 	config = ConfigParser.ConfigParser()
-	config.read(os.path.split(os.path.realpath(__file__))[0]+"/salving.conf")
+	config.read(os.path.split(os.path.realpath(__file__))[0]+"/cfg/salving.conf")
 	format       = config.get("log", "format").replace('@', '%')
 	backupcount  = int(config.get("log", "backupcount"))
 	maxbytes     = int(config.get("log", "maxbytes"))
@@ -22,7 +22,7 @@ def logger(name=None):
 
 	logger = logging.getLogger()
 	logger.setLevel(level)
-	Rthandler = RotatingFileHandler(os.path.split(os.path.realpath(__file__))[0]+'/'+name,
+	Rthandler = RotatingFileHandler(os.path.split(os.path.realpath(__file__))[0]+'/log/'+name,
 			maxBytes=maxbytes,
 			backupCount=backupcount)
 	formatter = logging.Formatter(format)
